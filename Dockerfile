@@ -5,7 +5,7 @@ LABEL maintainer="ThisWaySir@github.com"
 ENV TZ Asia/Shanghai
 
 RUN apt-get update \
-        && apt-get install -y wget curl git ncurses-dev build-essential bzip2 openssh-server python3 python3-pip privoxy golang-1.9 clang cmake zsh \
+        && apt-get install -y sudo wget curl git ncurses-dev build-essential bzip2 openssh-server python3 python3-pip privoxy golang-1.9 clang cmake zsh \
         && pip3 install shadowsocks
 
 # ssh server
@@ -14,19 +14,16 @@ RUN apt-get update \
 RUN sed -i 's/PermitRootLogin\s.*/PermitRootLogin yes/g' /etc/ssh/sshd_config \
     && service ssh restart
 
-# oh my zsh
-#RUN sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \
-RUN wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | zsh || true \
-        && chsh -s /bin/zsh
+RUN adduser --disabled-password --gecos '' karel \
+        && adduser karel sudo \
+        && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-#RUN useradd -ms /bin/bash karel \
-#        && echo "karel:XXXX" | chpasswd \
-#        && adduser karel sudo
+USER karel
 
-#USER karel
+WORKDIR /home/karel
 
 # proxy
-RUN echo '{"server":"X.X.X.X", "server_port":XXXX, "local_address": "127.0.0.1", "local_port":1080, "password":"XXXX", "timeout":300, "method":"aes-256-cfb", "fast_open": false}' >> $HOME/.shadowsocks.json \
+RUN echo '{"server":"X.X.X.X", "server_port":X, "local_address": "127.0.0.1", "local_port":1080, "password":"XXXX", "timeout":300, "method":"aes-256-cfb", "fast_open": false}' >> $HOME/.shadowsocks.json \
         && cp /etc/privoxy/config $HOME/.privoxy \
         && echo 'forward-socks5    /   127.0.0.1:1080 .' >> $HOME/.privoxy \
         && (nohup /usr/local/bin/sslocal -c $HOME/.shadowsocks.json &) \
@@ -57,8 +54,10 @@ RUN wget ftp://ftp.home.vim.org/pub/vim/unix/vim-8.0.tar.bz2 \
 #    && cd vim-master/src \
         && ./configure --enable-python3interp=yes --with-python3-config-dir=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu \
         && make \
-        && make install
-
+        && sudo make install \
+        && cd .. \
+        && rm -rf vim80 \
+        && rm vim-8.0.tar
 #USER karel
 
 # ycm
@@ -73,5 +72,19 @@ RUN cp $HOME/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf
 RUN echo "let g:ycm_server_python_interpreter='/usr/bin/python3.5'" >> $HOME/.vimrc \
         && echo "let g:ycm_global_ycm_extra_conf='$HOME/.vim/.ycm_extra_conf.py'" >> $HOME/.vimrc \
         && echo "let g:ycm_seed_identifiers_with_syntax=1" >> $HOME/.vimrc \
-        && echo "set completeopt-=preview" >> $HOME/.vimrc
+        && echo "set completeopt-=preview" >> $HOME/.vimrc \
+		&& echo "set encoding=utf-8" >> $HOME/.vimrc \
+		&& echo "set backspace=indent,eol,start" >> $HOME/.vimrc
 
+RUN wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | zsh || true \
+        && sudo chsh -s /bin/zsh
+
+RUN echo "karel:XXXX" | sudo chpasswd \
+        && sudo sed -i 's/.*ALL=(ALL) NOPASSWD:ALL//g' /etc/sudoers
+
+RUN git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim \
+        && git clone https://github.com/ThisWaySir/dev-env.git $HOME \
+        && mv $HOME/dev-env/vimrc $HOME/.vimrc \
+        && rm -rf $HOME/dev-env
+
+# set ENV and sshd config, then start proxy, tang-dang!
