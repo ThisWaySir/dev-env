@@ -79,12 +79,13 @@ RUN echo "let g:ycm_server_python_interpreter='/usr/bin/python3.5'" >> $HOME/.vi
 RUN wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | zsh || true \
         && sudo chsh -s /bin/zsh
 
-RUN echo "karel:XXXX" | sudo chpasswd \
-        && sudo sed -i 's/.*ALL=(ALL) NOPASSWD:ALL//g' /etc/sudoers
+RUN echo "karel:XXXX" | sudo chpasswd
+#        && sudo sed -i 's/.*ALL=(ALL) NOPASSWD:ALL//g' /etc/sudoers
 
 RUN git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim \
         && git clone https://github.com/ThisWaySir/dev-env.git $HOME \
         && mv $HOME/dev-env/vimrc $HOME/.vimrc \
         && rm -rf $HOME/dev-env
 
+# install tmux powerline, etc...
 # set ENV and sshd config, then start proxy, tang-dang!
