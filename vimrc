@@ -227,10 +227,7 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'ShowPairs'
 Plugin 'fatih/vim-go'
 Plugin 'scrooloose/nerdtree'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
 Plugin 'scrooloose/syntastic'
-Plugin 'edkolev/promptline.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'dgryski/vim-godef'
@@ -242,11 +239,24 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+set rtp+=/usr/local/lib/python2.7/dist-packages/powerline/bindings/vim
+set laststatus=2
 
 let g:ycm_server_python_interpreter='/usr/bin/python3.5'
 
 let g:ycm_global_ycm_extra_conf='/home/karel/.vim/.ycm_extra_conf.py'
 
+" ycm 配置
 set rtp+=~/YouCompleteMe
 
 "开启基于tag的补全，可以在这之后添加需要的标签路径  
@@ -328,13 +338,11 @@ syntax enable                " 打开语法高亮
 " syntax on                    " 开启文件类型侦测
 " 设置着色模式和字体
 set t_Co=256
-colorscheme solarized
+set background=dark
 let g:solarized_termcolors=256
 let g:solarized_underline = 0 
-" let g:solarized_termtrans=1
-let g:solarized_visibility= "high"
-let g:solarized_contrast="high"
-set background=dark
+let g:solarized_termtrans=1
+colorscheme solarized
 
 if g:isWIN
     "molokai
@@ -424,6 +432,7 @@ au FileType scheme,racket,newlisp,lisp,clojure,lfe :inoremap ` `
 au FileType scheme,racket,newlisp,lisp,clojure,lfe :inoremap * **<esc>i
 au FileType css,scss,less :inoremap : : ;<esc>i
 
+
 " 针对部分语言加减指定字符的单词属性
 au FileType clojure        set iskeyword-=.
 au FileType clojure        set iskeyword-=>
@@ -438,122 +447,6 @@ au FileType css,scss,less  set iskeyword+=-
 au FileType nginx          set iskeyword-=/
 au FileType nginx          set iskeyword-=.
 au FileType nginx          set iskeyword-=:
-
-
-" 针对部分语言添加字典补全
-au FileType c          call AddCDict()
-au FileType cpp        call AddCPPDict()
-au FileType java       call AddJavaDict()
-au FileType lua        call AddLuaDict()
-au FileType perl       call AddPerlDict()
-au FileType php        call AddPHPDict()
-au FileType python     call AddPythonDict()
-au FileType ruby       call AddRubyDict()
-au FileType javascript call AddJavaScriptDict()
-au FileType coffee     call AddJavaScriptDict()
-au FileType typescript call AddJavaScriptDict()
-au FileType ls         call AddJavaScriptDict()
-au FileType css        call AddCSSDict()
-au FileType scss       call AddCSSDict()
-au FileType less       call AddCSSDict()
-
-function AddCDict()
-    if g:isWIN
-        set dict+=$VIM/vimfiles/dict/c.txt
-    else
-        set dict+=~/.vim/dict/c.txt
-    endif
-    set complete+=k
-endfunction
-
-function AddCPPDict()
-    if g:isWIN
-        set dict+=$VIM/vimfiles/dict/c.txt
-        set dict+=$VIM/vimfiles/dict/cpp-stdlib.txt
-        set dict+=$VIM/vimfiles/dict/cpp-boost.txt
-    else
-        set dict+=~/.vim/dict/c.txt
-        set dict+=~/.vim/dict/cpp-stdlib.txt
-        set dict+=~/.vim/dict/cpp-boost.txt
-    endif
-    set complete+=k
-endfunction
-
-function AddJavaDict()
-    if g:isWIN
-        set dict+=$VIM/vimfiles/dict/java.txt
-    else
-        set dict+=~/.vim/dict/java.txt
-    endif
-    set complete+=k
-endfunction
-
-function AddLuaDict()
-    if g:isWIN
-        set dict+=$VIM/vimfiles/dict/lua.txt
-    else
-        set dict+=~/.vim/dict/lua.txt
-    endif
-    set complete+=k
-endfunction
-
-function AddPerlDict()
-    if g:isWIN
-        set dict+=$VIM/vimfiles/dict/perl.txt
-    else
-        set dict+=~/.vim/dict/perl.txt
-    endif
-    set complete+=k
-endfunction
-
-function AddPHPDict()
-    if g:isWIN
-        set dict+=$VIM/vimfiles/dict/php.txt
-        set dict+=$VIM/vimfiles/dict/wordpress/*.txt
-    else
-        set dict+=~/.vim/dict/php.txt
-        set dict+=~/.vim/dict/wordpress/*.txt
-    endif
-    set complete+=k
-endfunction
-
-function AddPythonDict()
-    if g:isWIN
-        set dict+=$VIM/vimfiles/dict/python.txt
-    else
-        set dict+=~/.vim/dict/python.txt
-    endif
-    set complete+=k
-endfunction
-
-function AddRubyDict()
-    if g:isWIN
-        set dict+=$VIM/vimfiles/dict/ruby.txt
-    else
-        set dict+=~/.vim/dict/ruby.txt
-    endif
-    set complete+=k
-endfunction
-
-function AddJavaScriptDict()
-    if g:isWIN
-        set dict+=$VIM/vimfiles/dict/javascript.txt
-        set dict+=$VIM/vimfiles/dict/javascript_libs/*.txt
-    else
-        set dict+=~/.vim/dict/javascript.txt
-        set dict+=~/.vim/dict/javascript_libs/*.txt
-    endif
-    set complete+=k
-endfunction
-
-function AddCSSDict()
-    if g:isWIN
-        set dict+=$VIM/vimfiles/dict/css.txt
-    else
-        set dict+=~/.vim/dict/css.txt
-    endif
-    set complete+=k
-endfunction
 
 
 " 开启部分语法高亮的非默认特性
@@ -597,7 +490,7 @@ let g:snipMate                                  = {}
 let g:snipMate.no_default_aliases               = 1
 " 同名同描述补全开启覆盖，只取最后一个生效
 let g:snipMate.override                         = 1
-" 使用旧版解析器
+" 使用旧版£析器
 let g:snipMate.snippet_version                  = 0
 " 设置补全项之间的继承关系，比如 C语言补全继承C++的补全
 let g:snipMate.scope_aliases                    = {}
@@ -637,28 +530,6 @@ let g:indentLine_char       = '┆'              " 设置对齐线字符
 let g:indentLine_color_term = 239              " 设置非GUI线条颜色
 let g:indentLine_color_gui  = '#A4E57E'        " 设置GUI线条颜色
 
-" AirLine             彩色状态栏
-let g:airline_theme           = 'powerlineish' " 设置主题
-let g:airline_powerline_fonts = 0              " 关闭自定义字体
-
-" Promptline          终端辅助工具
-let g:promptline_powerline_symbols = 0         " 关闭特殊符号
-let g:promptline_preset = {
-            \'a'    : [ '\u' ],
-            \'b'    : [ '\W' ],
-            \'c'    : [ promptline#slices#vcs_branch(), promptline#slices#git_status() ],
-            \'warn' : [ promptline#slices#last_exit_code() ]
-            \}                                 " 自定义命令行显示
-
-" GitGutter           Git辅助插件
-let g:gitgutter_enabled               = 0      " 默认不开启
-let g:gitgutter_signs                 = 0      " 默认不开启提示
-let g:gitgutter_highlight_lines       = 0      " 默认不高亮行
-let g:gitgutter_sign_added            = '+'    " 自定义新增指示符
-let g:gitgutter_sign_modified         = '>'    " 自定义修改指示符
-let g:gitgutter_sign_removed          = '-'    " 自定义删除指示符
-let g:gitgutter_sign_modified_removed = '->'   " 自定义既修改又删除指示符
-
 " Syntastic           语法检查
 let g:syntastic_check_on_open = 1              " 默认开启
 let g:syntastic_mode_map      = { 'mode': 'active', 'passive_filetypes': ['html', 'xhtml'] }
@@ -689,14 +560,6 @@ let g:php_cs_fixer_config = 'default'          " 使用默认配置
 let g:php_cs_fixer_php_path = 'php'            " 指定PHP可执行文件的路径
 let g:php_cs_fixer_enable_default_mapping = 1  " 使用插件默认的快捷键
 let g:php_cs_fixer_dry_run = 0                 " 只提示需要格式化的位置，不执行格式化 [0为不开启]
-
-" vim-ruby                                       Ruby代码补全 [默认只在Mac平台下开启，其他平台请确认Vim有编译+ruby选项，然后修改此处配置以开启使用]
-if g:isMAC
-    let g:rubycomplete_buffer_loading = 1
-    let g:rubycomplete_classes_in_global = 1
-    let g:rubycomplete_rails = 1
-    let g:rubycomplete_load_gemfile = 1
-endif
 
 
 " ======= 自定义快捷键 ======= "
@@ -754,7 +617,7 @@ nmap <leader>tl :TagbarToggle<cr><c-w><c-l>
 nmap <leader>fe :FencView<cr>
 
 " \mp                 生成Promptline脚本文件，用于个性化终端操作 [Promptline插件 ]
-nmap <leader>mp :!rm ~/backup/.promptline<cr><esc>:PromptlineSnapshot ~/backup/.promptline airline<cr>
+"nmap <leader>mp :!rm ~/backup/.promptline<cr><esc>:PromptlineSnapshot ~/backup/.promptline airline<cr>
 
 " \gi                 开启或关闭GitGutter [GitGutter插件]
 nmap <leader>gi :GitGutterToggle<cr>:GitGutterSignsToggle<cr>:GitGutterLineHighlightsToggle<cr>
@@ -1002,5 +865,6 @@ else
         source $HOME/.self.vim
     end
 end
+
 
 
