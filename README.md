@@ -1,2 +1,2 @@
 # dev-env
-Docker based development environment, include proxy, vim, python, go etc.
+Docker based developing environment, include proxy, vim, python, go etc.
